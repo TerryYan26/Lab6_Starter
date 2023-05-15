@@ -6,17 +6,17 @@ class RecipeCard extends HTMLElement {
   constructor() {
     super(); // Inheret everything from HTMLElement
 
-    // A1. Attach the shadow DOM to this Web Component (leave the mode open)
+    // A1. TODO - Attach the shadow DOM to this Web Component (leave the mode open)
     this.attachShadow({ mode: 'open' });
 
-    // A2. Create an <article> element - This will hold our markup once our data is set
+    // A2. TODO -  Create an <article> element - This will hold our markup once our data is set
     const articleEl = document.createElement('article');
 
-    // A3. Create a style element - This will hold all of the styles for the Web Component
+    // A3. TODO -  Create a style element - This will hold all of the styles for the Web Component
     const styleEl = document.createElement('style');
 
-    // A4. Insert all of the styles from cardTemplate.html into the <style> element you just made
-    styleEl.textContent = `
+    // A4. TODO -  Insert all of the styles from cardTemplate.html into the <style> element you just made
+    styleEl.innerHTML = `
     * {
     font-family: sans-serif;
     margin: 0;
@@ -94,8 +94,8 @@ class RecipeCard extends HTMLElement {
   }
     `;
 
-    // A5. Append the <style> and <article> elements to the Shadow DOM
-    this.shadowRoot.append(styleEl, articleEl);
+    // A5. TODO -  Append the <style> and <article> elements to the Shadow DOM
+    this.shadowRoot.append(articleEl,styleEl);
   }
 
   /**
@@ -108,11 +108,11 @@ class RecipeCard extends HTMLElement {
    * @param {Object} data - The data to pass into the <recipe-card>, must be of the
    *                        following format:
    *                        {
-   *                          "imgSrc": "string",
-   *                          "imgAlt": "string",
-   *                          "titleLnk": "string",
-   *                          "titleTxt": "string",
-   *                          " organization": "string",
+   *                          "imgSrc": "string", done
+   *                          "imgAlt": "string", done
+   *                          "titleLnk": "string", done
+   *                          "titleTxt": "string", done
+   *                          " organization": "string", 
    *                          "rating": number,
    *                          "numRatings": number,
    *                          "lengthTime": "string",
@@ -125,21 +125,41 @@ class RecipeCard extends HTMLElement {
 
     // A6. Select the <article> we added to the Shadow DOM in the constructor
     const articleEl = this.shadowRoot.querySelector('article');
-
+    let rating = 0;  //spe case no input defalut to 0;
+    let numRatings = 0;
+    if (data.numRatings !== ''){// fixed bug if no people so the rate will be 0, example 5star but 0 people = 0 star and 0 people 
+      numRatings = data.numRatings;
+      rating = data.rating !== undefined ? data.rating : rating;
+    }
+    
+    
+   
     // A7. Set the contents of the <article> with the <article> template given in
     //     cardTemplate.html and the data passed in (You should only have one <article>,
     //     do not nest an <article> inside another <article>). You should use Template
     //     literals (tempalte strings) and element.innerHTML for this.
+    
+
     articleEl.innerHTML = `
-      <h2>${data.titleTxt}</h2>
-      <img src="${data.imgSrc}" alt="${data.imgAlt}">
-      <p>Rating: ${data.rating} (${data.numRatings} ratings)</p>
-      <p>Prep Time: ${data.lengthTime}</p>
-      <p>Ingredients: ${data.ingredients}</p>
-      <p>Recipe from: <a href="${data.titleLnk}">${data.organization}</a></p>
+    <img src = "${data.imgSrc}" alt = "${data.imgAlt}">
+    <p class="title">
+      <a href="${data.titleLnk}">${data.titleTxt}</a>
+    </p>
+    <p class="organization">${data.organization}</p>
+    
+    <div class="rating">
+      <span>${rating}</span>
+      <img src="./assets/images/icons/${rating}-star.svg" alt="${rating} stars">
+      <span>(${numRatings})</span>
+    </div>
+    <time>${data.lengthTime}</time>
+    <p class="ingredients">
+      ${data.ingredients}
+    </p>
     `;
   }
 }
+// <div class="hfac6d LviCwe tNxQIb ynAwRc" aria-level="3" role="heading">Halloween Ghost Cookies</div>
 
 // A8. Define the Class as a customElement so that you can create
 //     'recipe-card' elements
